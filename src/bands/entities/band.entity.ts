@@ -2,9 +2,9 @@ import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity('Bands')
 export class Band extends BaseEntity {
-  @PrimaryGeneratedColumn()
-  bandId: number;
+  @PrimaryGeneratedColumn({ name: "BandID" })
+  id: number;
 
   @Column({ name: "Name" })
-  bandName: string;
+  name: string;
 }

@@ -16,7 +16,7 @@ import { TypeOrmModule } from "@nestjs/typeorm";
         synchronize: false,
         options: {
           encrypt: true,
-          trustServerCertificate: true
+          trustServerCertificate: Boolean(configService.getOrThrow('DB_TRUST_SERVER_CERTIFICATE')),
         }
       }),
       inject: [ConfigService],

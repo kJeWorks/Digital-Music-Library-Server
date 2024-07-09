@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateBandDto } from './dto/create-band.dto';
 import { UpdateBandDto } from './dto/update-band.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -11,7 +11,8 @@ export class BandsService {
     @InjectRepository(Band)
     private readonly bandsRepository: Repository<Band>,
   ) {}
-  create(createBandDto: CreateBandDto) {
+
+  async create(createBandDto: CreateBandDto) {
     return 'This action adds a new band';
   }
 
@@ -19,15 +20,21 @@ export class BandsService {
     return this.bandsRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} band`;
+  async findOne(id: number) {
+    const band = await this.bandsRepository.findOneBy({ id });
+
+    if (!band) {
+      throw new NotFoundException('Band not found');
+    }
+
+    return band;
   }
 
-  update(id: number, updateBandDto: UpdateBandDto) {
+  async update(id: number, updateBandDto: UpdateBandDto) {
     return `This action updates a #${id} band`;
   }
 
-  remove(id: number) {
+  async remove(id: number) {
     return `This action removes a #${id} band`;
   }
 }
