@@ -5,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Band } from './entities/band.entity';
 import { Album } from 'src/albums/entities/album.entity';
+import { DbOperationException } from 'src/exceptions/db_operation.exception';
 
 @Injectable()
 export class BandsService {
@@ -14,8 +15,12 @@ export class BandsService {
   ) {}
 
   async create(createBandDto: CreateBandDto) {
-    const band = this.bandsRepository.save({ ...createBandDto, albums: [] });
-    return band;
+    try {
+      const band = this.bandsRepository.save({ ...createBandDto, albums: [] });
+      return band;
+    } catch (error) {
+      throw new DbOperationException(error.message);
+    }
   }
 
   async findAll() {
@@ -43,8 +48,12 @@ export class BandsService {
     const albums = updateBandDto.albums.map((createAlbumDto) => new Album(createAlbumDto));
     band.albums = albums;
     
-    await this.bandsRepository.save(band);
-    return band;
+    try {
+      await this.bandsRepository.save(band);
+      return band;
+    } catch (error) {
+      throw new DbOperationException(error.message);
+    }
   }
 
   async remove(id: number) {
@@ -54,7 +63,11 @@ export class BandsService {
       throw new NotFoundException('Band not found');
     }
 
-    await this.bandsRepository.remove(band);
-    return band;
+    try {
+      await this.bandsRepository.remove(band);
+      return band;
+    } catch (error) {
+      throw new DbOperationException(error.message);
+    }
   }
 }

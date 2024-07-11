@@ -6,6 +6,7 @@ import { Album } from './entities/album.entity';
 import { Repository } from 'typeorm';
 import { Band } from 'src/bands/entities/band.entity';
 import { Song } from 'src/songs/entities/song.entity';
+import { DbOperationException } from 'src/exceptions/db_operation.exception';
 
 @Injectable()
 export class AlbumsService {
@@ -24,13 +25,17 @@ export class AlbumsService {
       throw new NotFoundException('Band doesn\'t exist');
     }
 
-    const album = await this.albumsRepository.save({ 
-      title: createAlbumDto.title,
-      description: createAlbumDto.description,
-      band,
-      songs: [],
-     });
-    return album;
+    try {
+      const album = await this.albumsRepository.save({ 
+        title: createAlbumDto.title,
+        description: createAlbumDto.description,
+        band,
+        songs: [],
+       });
+      return album;
+    } catch (error) {
+      throw new DbOperationException(error.message);
+    }
   }
 
   async findAll() {
@@ -67,8 +72,12 @@ export class AlbumsService {
     const songs = updateAlbumDto.songs.map((createSongDto) => new Song(createSongDto));
     album.songs = songs;
 
-    await this.albumsRepository.save(album);
-    return album;
+    try {
+      await this.albumsRepository.save(album);
+      return album;
+    } catch (error) {
+      throw new DbOperationException(error.message);
+    }
   }
 
   async remove(id: number) {
@@ -78,7 +87,11 @@ export class AlbumsService {
       throw new NotFoundException('Album not found');
     }
 
-    await this.albumsRepository.remove(band);
-    return band;
+    try {
+      await this.albumsRepository.remove(band);
+      return band;
+    } catch (error) {
+      throw new DbOperationException(error.message);
+    }
   }
 }

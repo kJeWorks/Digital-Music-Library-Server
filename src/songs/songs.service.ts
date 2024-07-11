@@ -5,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Song } from './entities/song.entity';
 import { Repository } from 'typeorm';
 import { Album } from 'src/albums/entities/album.entity';
+import { DbOperationException } from 'src/exceptions/db_operation.exception';
 
 @Injectable()
 export class SongsService {
@@ -23,12 +24,16 @@ export class SongsService {
       throw new NotFoundException('Album doesn\'t exist');
     }
 
-    const song = await this.songsRepository.save({ 
-      title: createSongDto.title,
-      length: createSongDto.length,
-      album,
-     });
-    return song;
+    try {
+      const song = await this.songsRepository.save({ 
+        title: createSongDto.title,
+        length: createSongDto.length,
+        album,
+       });
+      return song;
+    } catch (error) {
+      throw new DbOperationException(error.message);
+    }
   }
 
   async findAll() {
@@ -62,8 +67,12 @@ export class SongsService {
     updateSongDto.length ? song.length = updateSongDto.length : song.length = song.length;
     updateSongDto.albumId ? song.album = album : song.album = song.album;
 
-    await this.songsRepository.save(song);
-    return song;
+    try {
+      await this.songsRepository.save(song);
+      return song;
+    } catch (error) {
+      throw new DbOperationException(error.message);
+    }
   }
 
   async remove(id: number) {
@@ -73,7 +82,11 @@ export class SongsService {
       throw new NotFoundException('Song not found');
     }
 
-    await this.songsRepository.remove(song);
-    return song;
+    try {
+      await this.songsRepository.remove(song);
+      return song;
+    } catch (error) {
+      throw new DbOperationException(error.message);
+    }
   }
 }
