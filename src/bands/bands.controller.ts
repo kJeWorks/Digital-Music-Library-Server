@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, ParseIntPipe, ValidationPipe } from '@nestjs/common';
 import { BandsService } from './bands.service';
 import { CreateBandDto } from './dto/create-band.dto';
 import { UpdateBandDto } from './dto/update-band.dto';
@@ -8,7 +8,7 @@ export class BandsController {
   constructor(private readonly bandsService: BandsService) {}
 
   @Post()
-  create(@Body() createBandDto: CreateBandDto) {
+  async create(@Body(new ValidationPipe()) createBandDto: CreateBandDto) {
     return this.bandsService.create(createBandDto);
   }
 
@@ -18,17 +18,17 @@ export class BandsController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.bandsService.findOne(+id);
+  async findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.bandsService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateBandDto: UpdateBandDto) {
-    return this.bandsService.update(+id, updateBandDto);
+  async update(@Param('id', ParseIntPipe) id: number, @Body(new ValidationPipe()) updateBandDto: UpdateBandDto) {
+    return this.bandsService.update(id, updateBandDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.bandsService.remove(+id);
+  async remove(@Param('id', ParseIntPipe) id: number) {
+    return this.bandsService.remove(id);
   }
 }

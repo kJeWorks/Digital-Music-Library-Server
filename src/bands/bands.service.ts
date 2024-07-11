@@ -13,7 +13,8 @@ export class BandsService {
   ) {}
 
   async create(createBandDto: CreateBandDto) {
-    return 'This action adds a new band';
+    const band = this.bandsRepository.save(createBandDto);
+    return band;
   }
 
   async findAll() {
@@ -31,10 +32,25 @@ export class BandsService {
   }
 
   async update(id: number, updateBandDto: UpdateBandDto) {
-    return `This action updates a #${id} band`;
+    const band = await this.bandsRepository.findOneBy({ id });
+
+    if (!band) {
+      throw new NotFoundException('Band not found');
+    }
+
+    band.name = updateBandDto.name;
+    await this.bandsRepository.save(band);
+    return band;
   }
 
   async remove(id: number) {
-    return `This action removes a #${id} band`;
+    const band = await this.bandsRepository.findOneBy({ id });
+
+    if (!band) {
+      throw new NotFoundException('Band not found');
+    }
+
+    await this.bandsRepository.remove(band);
+    return band;
   }
 }
