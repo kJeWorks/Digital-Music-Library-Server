@@ -1,15 +1,15 @@
 import { Album } from "src/albums/entities/album.entity";
 import { BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
-@Entity('Songs')
+@Entity('songs')
 export class Song extends BaseEntity {
   @PrimaryGeneratedColumn({ name: "SongID" })
   id: number;
 
-  @Column({ name: "Title" })
+  @Column({ length: 50 })
   title: string;
 
-  @Column({ name: "Length" })
+  @Column({ length: 50 })
   length: string;
 
   @ManyToOne(() => Album, (album) => album.songs)

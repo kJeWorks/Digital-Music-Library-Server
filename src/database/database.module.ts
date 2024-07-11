@@ -13,7 +13,7 @@ import { TypeOrmModule } from "@nestjs/typeorm";
         password: configService.getOrThrow('DB_PASSWORD'),
         database: configService.getOrThrow('DB_NAME'),
         entities: [__dirname + '/../**/*.entity.{js,ts}'],
-        synchronize: false,
+        synchronize: Boolean(configService.getOrThrow('DB_SYNCHRONIZE')),
         options: {
           encrypt: true,
           trustServerCertificate: Boolean(configService.getOrThrow('DB_TRUST_SERVER_CERTIFICATE')),
