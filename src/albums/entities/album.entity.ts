@@ -15,4 +15,8 @@ export class Album extends BaseEntity {
   @ManyToOne(() => Band, (band) => band.albums)
   band: Band;
 
+  constructor(partial: Partial<Album>) {
+    super();
+    Object.assign(this, partial);
+  }
 }
