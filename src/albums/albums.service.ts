@@ -5,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Album } from './entities/album.entity';
 import { Repository } from 'typeorm';
 import { Band } from 'src/bands/entities/band.entity';
+import { Song } from 'src/songs/entities/song.entity';
 
 @Injectable()
 export class AlbumsService {
@@ -27,6 +28,7 @@ export class AlbumsService {
       title: createAlbumDto.title,
       description: createAlbumDto.description,
       band,
+      songs: [],
      });
     return album;
   }
@@ -36,7 +38,7 @@ export class AlbumsService {
   }
 
   async findOne(id: number) {
-    const album = await this.albumsRepository.findOne({ where: {id}, relations: { band: true } });
+    const album = await this.albumsRepository.findOne({ where: {id}, relations: { band: true, songs: true } });
 
     if (!album) {
       throw new NotFoundException('Album not found');
@@ -61,6 +63,10 @@ export class AlbumsService {
     updateAlbumDto.title ? album.title = updateAlbumDto.title : album.title = album.title;
     updateAlbumDto.description ? album.description = updateAlbumDto.description : album.description = album.description;
     updateAlbumDto.bandId ? album.band = band : album.band = album.band;
+
+    const songs = updateAlbumDto.songs.map((createSongDto) => new Song(createSongDto));
+    album.songs = songs;
+
     await this.albumsRepository.save(album);
     return album;
   }

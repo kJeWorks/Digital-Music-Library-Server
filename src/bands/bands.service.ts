@@ -42,6 +42,7 @@ export class BandsService {
     band.name = updateBandDto.name;
     const albums = updateBandDto.albums.map((createAlbumDto) => new Album(createAlbumDto));
     band.albums = albums;
+    
     await this.bandsRepository.save(band);
     return band;
   }

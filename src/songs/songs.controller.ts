@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ValidationPipe, ParseIntPipe } from '@nestjs/common';
 import { SongsService } from './songs.service';
 import { CreateSongDto } from './dto/create-song.dto';
 import { UpdateSongDto } from './dto/update-song.dto';
@@ -8,7 +8,7 @@ export class SongsController {
   constructor(private readonly songsService: SongsService) {}
 
   @Post()
-  create(@Body() createSongDto: CreateSongDto) {
+  create(@Body(new ValidationPipe()) createSongDto: CreateSongDto) {
     return this.songsService.create(createSongDto);
   }
 
@@ -18,17 +18,17 @@ export class SongsController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.songsService.findOne(+id);
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.songsService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateSongDto: UpdateSongDto) {
-    return this.songsService.update(+id, updateSongDto);
+  update(@Param('id', ParseIntPipe) id: number, @Body(new ValidationPipe()) updateSongDto: UpdateSongDto) {
+    return this.songsService.update(id, updateSongDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.songsService.remove(+id);
+  remove(@Param('id', ParseIntPipe) id: number) {
+    return this.songsService.remove(id);
   }
 }

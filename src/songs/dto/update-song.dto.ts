@@ -1,4 +1,15 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { CreateSongDto } from './create-song.dto';
+import { IsInt, IsOptional, IsString } from "class-validator";
 
-export class UpdateSongDto extends PartialType(CreateSongDto) {}
+export class UpdateSongDto {
+  @IsString()
+  @IsOptional()
+  title: string;
+
+  @IsString()
+  @IsOptional()
+  length: string;
+
+  @IsInt()
+  @IsOptional()
+  albumId: number;
+}

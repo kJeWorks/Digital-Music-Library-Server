@@ -1,5 +1,6 @@
 import { Band } from "src/bands/entities/band.entity";
-import { BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Song } from "src/songs/entities/song.entity";
+import { BaseEntity, Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity('Albums')
 export class Album extends BaseEntity {
@@ -14,6 +15,9 @@ export class Album extends BaseEntity {
 
   @ManyToOne(() => Band, (band) => band.albums)
   band: Band;
+
+  @OneToMany(() => Song, (song) => song.album, { cascade: true})
+  songs: Song[];
 
   constructor(partial: Partial<Album>) {
     super();
