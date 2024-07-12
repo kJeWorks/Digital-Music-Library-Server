@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, ParseIntPipe, ValidationPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, ValidationPipe, Query } from '@nestjs/common';
 import { BandsService } from './bands.service';
 import { CreateBandDto } from './dto/create-band.dto';
 import { UpdateBandDto } from './dto/update-band.dto';
@@ -13,7 +13,10 @@ export class BandsController {
   }
 
   @Get()
-  async findAll() {
+  async findAll(@Query('query') query: string) {
+    if (query) {
+      return this.bandsService.findByQuery(query);
+    }
     return this.bandsService.findAll();
   }
 

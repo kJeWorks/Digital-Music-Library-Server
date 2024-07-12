@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateBandDto } from './dto/create-band.dto';
 import { UpdateBandDto } from './dto/update-band.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 import { Band } from './entities/band.entity';
 import { Album } from 'src/albums/entities/album.entity';
 import { DbOperationException } from 'src/exceptions/db_operation.exception';
@@ -35,6 +35,10 @@ export class BandsService {
     }
 
     return band;
+  }
+
+  async findByQuery(query: string) {
+    return this.bandsRepository.find({ where: { name: Like(`%${query}%`) } });
   }
 
   async update(id: number, updateBandDto: UpdateBandDto) {

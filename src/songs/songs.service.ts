@@ -3,7 +3,7 @@ import { CreateSongDto } from './dto/create-song.dto';
 import { UpdateSongDto } from './dto/update-song.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Song } from './entities/song.entity';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 import { Album } from 'src/albums/entities/album.entity';
 import { DbOperationException } from 'src/exceptions/db_operation.exception';
 
@@ -48,6 +48,10 @@ export class SongsService {
     }
 
     return song;
+  }
+
+  async findByQuery(query: string) {
+    return this.songsRepository.find({ where: [{ title: Like(`%${query}%`) }, { length: Like(`%${query}%`) }] });
   }
 
   async update(id: number, updateSongDto: UpdateSongDto) {

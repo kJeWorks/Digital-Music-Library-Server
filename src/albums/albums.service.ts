@@ -3,7 +3,7 @@ import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Album } from './entities/album.entity';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 import { Band } from 'src/bands/entities/band.entity';
 import { Song } from 'src/songs/entities/song.entity';
 import { DbOperationException } from 'src/exceptions/db_operation.exception';
@@ -52,6 +52,10 @@ export class AlbumsService {
     return album;
   }
 
+  async findByQuery(query: string) {
+    return this.albumsRepository.find({ where: [{ title: Like(`%${query}%`) }, { description: Like(`%${query}%`) } ] });
+  }
+  
   async update(id: number, updateAlbumDto: UpdateAlbumDto) {
     const album = await this.albumsRepository.findOneBy({ id });
 
