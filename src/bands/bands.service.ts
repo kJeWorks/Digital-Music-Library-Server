@@ -16,8 +16,9 @@ export class BandsService {
 
   async create(createBandDto: CreateBandDto) {
     try {
-      const band = this.bandsRepository.save({ ...createBandDto, albums: [] });
-      return band;
+      const newBand = await this.bandsRepository.create({ ...createBandDto, albums: [] });
+      await this.bandsRepository.save(newBand);
+      return newBand;
     } catch (error) {
       throw new DbOperationException(error.message);
     }
@@ -47,14 +48,10 @@ export class BandsService {
     if (!band) {
       throw new NotFoundException('Band not found');
     }
-
-    band.name = updateBandDto.name;
-    const albums = updateBandDto.albums.map((createAlbumDto) => new Album(createAlbumDto));
-    band.albums = albums;
     
     try {
-      await this.bandsRepository.save(band);
-      return band;
+      await this.bandsRepository.update(id, updateBandDto);
+      return { id, ...updateBandDto };
     } catch (error) {
       throw new DbOperationException(error.message);
     }

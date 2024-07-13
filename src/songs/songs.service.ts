@@ -25,12 +25,13 @@ export class SongsService {
     }
 
     try {
-      const song = await this.songsRepository.save({ 
+      const newSong = await this.songsRepository.create({ 
         title: createSongDto.title,
         length: createSongDto.length,
         album,
        });
-      return song;
+      await this.songsRepository.save(newSong);
+      return newSong;
     } catch (error) {
       throw new DbOperationException(error.message);
     }

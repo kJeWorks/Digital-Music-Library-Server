@@ -1,4 +1,4 @@
-import { IsArray, IsInt, IsNotEmpty, IsOptional, IsString } from "class-validator";
+import { IsArray, IsInt, IsOptional, IsString } from "class-validator";
 import { CreateSongDto } from "src/songs/dto/create-song.dto";
 
 export class UpdateAlbumDto {
@@ -15,6 +15,6 @@ export class UpdateAlbumDto {
   bandId: number;
 
   @IsArray()
-  @IsNotEmpty()
+  @IsOptional()
   songs: CreateSongDto[];
 }

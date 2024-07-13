@@ -8,7 +8,7 @@ export class BandsController {
   constructor(private readonly bandsService: BandsService) {}
 
   @Post()
-  async create(@Body(new ValidationPipe()) createBandDto: CreateBandDto) {
+  async create(@Body(new ValidationPipe({ whitelist: true, transform: true })) createBandDto: CreateBandDto) {
     return this.bandsService.create(createBandDto);
   }
 
@@ -26,7 +26,7 @@ export class BandsController {
   }
 
   @Patch(':id')
-  async update(@Param('id', ParseIntPipe) id: number, @Body(new ValidationPipe()) updateBandDto: UpdateBandDto) {
+  async update(@Param('id', ParseIntPipe) id: number, @Body(new ValidationPipe({ whitelist: true, transform: true })) updateBandDto: UpdateBandDto) {
     return this.bandsService.update(id, updateBandDto);
   }
 

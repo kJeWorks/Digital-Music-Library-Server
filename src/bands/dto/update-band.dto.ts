@@ -1,12 +1,12 @@
 import { CreateAlbumDto } from 'src/albums/dto/create-album.dto';
-import { IsArray, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsArray, IsOptional, IsString } from 'class-validator';
 
 export class UpdateBandDto {
   @IsString()
   @IsOptional()
   name: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsArray()
   albums: CreateAlbumDto[];
 }

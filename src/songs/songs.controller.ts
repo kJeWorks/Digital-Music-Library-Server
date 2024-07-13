@@ -8,12 +8,12 @@ export class SongsController {
   constructor(private readonly songsService: SongsService) {}
 
   @Post()
-  create(@Body(new ValidationPipe()) createSongDto: CreateSongDto) {
+  async create(@Body(new ValidationPipe({ whitelist: true, transform: true })) createSongDto: CreateSongDto) {
     return this.songsService.create(createSongDto);
   }
 
   @Get()
-  findAll(@Query('query') query: string) {
+  async findAll(@Query('query') query: string) {
     if (query) {
       return this.songsService.findByQuery(query);
     }
@@ -21,17 +21,17 @@ export class SongsController {
   }
 
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number) {
+  async findOne(@Param('id', ParseIntPipe) id: number) {
     return this.songsService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id', ParseIntPipe) id: number, @Body(new ValidationPipe()) updateSongDto: UpdateSongDto) {
+  async update(@Param('id', ParseIntPipe) id: number, @Body(new ValidationPipe({ whitelist: true, transform: true })) updateSongDto: UpdateSongDto) {
     return this.songsService.update(id, updateSongDto);
   }
 
   @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: number) {
+  async remove(@Param('id', ParseIntPipe) id: number) {
     return this.songsService.remove(id);
   }
 }

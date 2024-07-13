@@ -26,20 +26,22 @@ export class AlbumsService {
     }
 
     try {
-      const album = await this.albumsRepository.save({ 
+      const newAlbum = await this.albumsRepository.create({ 
         title: createAlbumDto.title,
         description: createAlbumDto.description,
         band,
         songs: [],
-       });
-      return album;
+       })
+      
+      await this.albumsRepository.save(newAlbum);
+      return newAlbum;
     } catch (error) {
       throw new DbOperationException(error.message);
     }
   }
 
   async findAll() {
-    return this.albumsRepository.find();
+    return this.albumsRepository.find({ relations: { band: true } });
   }
 
   async findOne(id: number) {
@@ -53,7 +55,13 @@ export class AlbumsService {
   }
 
   async findByQuery(query: string) {
-    return this.albumsRepository.find({ where: [{ title: Like(`%${query}%`) }, { description: Like(`%${query}%`) } ] });
+    return this.albumsRepository.find({ 
+      where: [
+        { title: Like(`%${query}%`) }, 
+        { description: Like(`%${query}%`) } 
+      ], 
+      relations: { band: true },
+    });
   }
   
   async update(id: number, updateAlbumDto: UpdateAlbumDto) {
@@ -73,8 +81,10 @@ export class AlbumsService {
     updateAlbumDto.description ? album.description = updateAlbumDto.description : album.description = album.description;
     updateAlbumDto.bandId ? album.band = band : album.band = album.band;
 
-    const songs = updateAlbumDto.songs.map((createSongDto) => new Song(createSongDto));
-    album.songs = songs;
+    if (updateAlbumDto.songs) {
+      const songs = updateAlbumDto.songs.map((createSongDto) => new Song(createSongDto));
+      album.songs = songs;
+    }
 
     try {
       await this.albumsRepository.save(album);

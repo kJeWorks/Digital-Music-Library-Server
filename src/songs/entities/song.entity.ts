@@ -3,7 +3,7 @@ import { BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "t
 
 @Entity('songs')
 export class Song extends BaseEntity {
-  @PrimaryGeneratedColumn({ name: "SongID" })
+  @PrimaryGeneratedColumn()
   id: number;
 
   @Column({ length: 50 })
