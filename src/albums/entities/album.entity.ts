@@ -13,7 +13,7 @@ export class Album extends BaseEntity {
   @Column("text")
   description: string;
 
-  @ManyToOne(() => Band, (band) => band.albums)
+  @ManyToOne(() => Band, (band) => band.albums, { onDelete: 'CASCADE' })
   band: Band;
 
   @OneToMany(() => Song, (song) => song.album, { cascade: true, onDelete: 'CASCADE' })

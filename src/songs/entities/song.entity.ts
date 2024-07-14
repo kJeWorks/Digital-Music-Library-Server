@@ -12,7 +12,7 @@ export class Song extends BaseEntity {
   @Column({ length: 50 })
   length: string;
 
-  @ManyToOne(() => Album, (album) => album.songs)
+  @ManyToOne(() => Album, (album) => album.songs, { onDelete: 'CASCADE' })
   album: Album;
 
   constructor(partial: Partial<Song>) {
