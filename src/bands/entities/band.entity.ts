@@ -9,6 +9,6 @@ export class Band extends BaseEntity {
   @Column({ length: 50 })
   name: string;
 
-  @OneToMany(() => Album, (album) => album.band, { cascade: true })
+  @OneToMany(() => Album, (album) => album.band, { cascade: true, onDelete: 'CASCADE' })
   albums: Album[];
 }

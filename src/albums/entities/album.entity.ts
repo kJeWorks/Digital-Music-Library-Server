@@ -16,7 +16,7 @@ export class Album extends BaseEntity {
   @ManyToOne(() => Band, (band) => band.albums)
   band: Band;
 
-  @OneToMany(() => Song, (song) => song.album, { cascade: true})
+  @OneToMany(() => Song, (song) => song.album, { cascade: true, onDelete: 'CASCADE' })
   songs: Song[];
 
   constructor(partial: Partial<Album>) {
